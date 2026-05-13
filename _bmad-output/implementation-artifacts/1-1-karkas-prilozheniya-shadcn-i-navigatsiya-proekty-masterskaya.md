@@ -1,6 +1,6 @@
 # Story 1.1: Каркас приложения, shadcn и навигация «Проекты / Мастерская»
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -28,32 +28,50 @@ So that быстро переключаться между заказами и �
 
 ## Tasks / Subtasks
 
-- [ ] **Инициализация shadcn** (AC: #2, #3)  
-  - [ ] Из корня монорепо: `pnpm dlx shadcn@latest init` в контексте `apps/clients/web` (или эквивалент по официальной [документации shadcn Next.js](https://ui.shadcn.com/docs/installation/next) и [Tailwind v4](https://ui.shadcn.com/docs/tailwind-v4)).  
-  - [ ] Убедиться, что версии peer-deps совместимы с **Next 16.2.6**, **React 19.2.4**, **Tailwind 4**; при конфликтах — зафиксировать выбор в Dev Notes story после правки.
+- [x] **Инициализация shadcn** (AC: #2, #3)  
+  - [x] Из корня монорепо: `pnpm dlx shadcn@latest init` в контексте `apps/clients/web` (или эквивалент по официальной [документации shadcn Next.js](https://ui.shadcn.com/docs/installation/next) и [Tailwind v4](https://ui.shadcn.com/docs/tailwind-v4)).  
+  - [x] Убедиться, что версии peer-deps совместимы с **Next 16.2.6**, **React 19.2.4**, **Tailwind 4**; при конфликтах — зафиксировать выбор в Dev Notes story после правки.
 
-- [ ] **Токены и типографика** (AC: #3)  
-  - [ ] Объединить переменные shadcn с `@theme inline` в `globals.css`; убрать рассинхрон «Arial» vs Geist: базовый шрифт интерфейса — **Geist Sans** из layout (см. UX-DR11, project-context).
+- [x] **Токены и типографика** (AC: #3)  
+  - [x] Объединить переменные shadcn с `@theme inline` в `globals.css`; убрать рассинхрон «Arial» vs Geist: базовый шрифт интерфейса — **Geist Sans** из layout (см. UX-DR11, project-context).
 
-- [ ] **`ProjectAppShell`** (AC: #1, #5, #6)  
-  - [ ] Реализовать клиентский компонент (например `src/components/cut/project-app-shell.tsx` или `src/components/project-app-shell.tsx`) с `"use client"`: desktop sidebar + mobile `Sheet`.  
-  - [ ] Семантика: `nav` для sidebar, `main` для контента; подписи навигации на **русском**.  
-  - [ ] Подключить shell через **layout** сегмента маршрутов (например группа `(app)`), не размазывая разметку по каждой `page.tsx`.
+- [x] **`ProjectAppShell`** (AC: #1, #5, #6)  
+  - [x] Реализовать клиентский компонент (например `src/components/cut/project-app-shell.tsx` или `src/components/project-app-shell.tsx`) с `"use client"`: desktop sidebar + mobile `Sheet`.  
+  - [x] Семантика: `nav` для sidebar, `main` для контента; подписи навигации на **русском**.  
+  - [x] Подключить shell через **layout** сегмента маршрутов (например группа `(app)`), не размазывая разметку по каждой `page.tsx`.
 
-- [ ] **Маршруты** (AC: #6)  
-  - [ ] `app/(app)/layout.tsx` — обёртка `ProjectAppShell` + `children`.  
-  - [ ] `app/(app)/projects/page.tsx`, `app/(app)/workshop/page.tsx` — явные заглушки с заголовком раздела.  
-  - [ ] `app/page.tsx` — редирект на `/projects` или первый раздел по продуктовой логике.
+- [x] **Маршруты** (AC: #6)  
+  - [x] `app/(app)/layout.tsx` — обёртка `ProjectAppShell` + `children`.  
+  - [x] `app/(app)/projects/page.tsx`, `app/(app)/workshop/page.tsx` — явные заглушки с заголовком раздела.  
+  - [x] `app/page.tsx` — редирект на `/projects` или первый раздел по продуктовой логике.
 
-- [ ] **Корневой layout и метаданные** (AC: #1)  
-  - [ ] Обновить `metadata` в `layout.tsx`: название и описание **cut-stack**, `lang="ru"` для `<html>`.
+- [x] **Корневой layout и метаданные** (AC: #1)  
+  - [x] Обновить `metadata` в `layout.tsx`: название и описание **cut-stack**, `lang="ru"` для `<html>`.
 
-- [ ] **Документирование границы `@repo/ui` / shadcn** (AC: #4)  
-  - [ ] Краткая заметка в `apps/clients/web/README.md` или в шапке `ProjectAppShell` (комментарий), без простыни.
+- [x] **Документирование границы `@repo/ui` / shadcn** (AC: #4)  
+  - [x] Краткая заметка в `apps/clients/web/README.md` или в шапке `ProjectAppShell` (комментарий), без простыни.
 
-- [ ] **Проверка** (AC: #7)  
-  - [ ] `pnpm lint` и `pnpm check-types` с корня.  
-  - [ ] Ручная проверка: ширина ≥1024 — sidebar; &lt;1024 — меню через Sheet, оба раздела открываются.
+- [x] **Проверка** (AC: #7)  
+  - [x] `pnpm lint` и `pnpm check-types` с корня.  
+  - [x] Ручная проверка: ширина ≥1024 — sidebar; &lt;1024 — меню через Sheet, оба раздела открываются.
+
+### Review Findings
+
+**Decision Needed:**
+- [x] [Review][Decision] Тёмная палитра `.dark` при ограничении AC3 «светлая палитра v1» — оставлено как задел shadcn init для будущего dark mode; активации нет, v1 не нарушено
+
+**Patches:**
+- [x] [Review][Patch] Цикличная CSS-переменная `--color-popover` — ложная тревога, код уже верный [`globals.css`]
+- [x] [Review][Patch] `shadcn` перемещён из `dependencies` в `devDependencies` [`package.json`]
+- [x] [Review][Patch] Убран лишний `<Separator />` после `border-b`-div в шапке sidebar [`project-app-shell.tsx`]
+- [x] [Review][Patch] Исправлен Tailwind-селектор: `[a]:hover:` → `[&:is(a)]:hover:` [`button.tsx`]
+
+**Deferred:**
+- [x] [Review][Defer] `"use client"` на всей оболочке — только `NavLinks` и Sheet-toggle нуждаются в клиенте; оптимизация на потом [`project-app-shell.tsx`] — deferred, архитектурное улучшение
+- [x] [Review][Defer] Токены `--chart-*` идентичны в светлой и тёмной теме [`globals.css`] — deferred, графики не используются в этой story
+- [x] [Review][Defer] Trailing slash не обрабатывается в `isActivePath` [`project-app-shell.tsx:isActivePath`] — deferred, текущие href без trailing slash
+- [x] [Review][Defer] Sheet закрывается до подтверждения успешной навигации [`project-app-shell.tsx:NavLinks`] — deferred, edge case v1
+- [x] [Review][Defer] Горизонтальный `ScrollBar` отсутствует в `ScrollArea` [`scroll-area.tsx`] — deferred, sidebar не переполняется горизонтально
 
 ## Dev Notes
 
@@ -116,15 +134,48 @@ apps/clients/web/src/
 
 ### Agent Model Used
 
-_(заполняется при dev-story)_
+Composer (Cursor)
 
 ### Debug Log References
 
+_(нет)_
+
+### Implementation Plan
+
+- Инициализация через `pnpm dlx shadcn@latest init -d -y` в `apps/clients/web`, затем `add sheet separator scroll-area`; пресет **base-nova**, Tailwind v4, без конфликтов peer-deps.
+- В `@theme inline` исправлена циклическая ссылка `--font-sans` → `var(--font-geist-sans)` для согласования с Geist из `layout.tsx`.
+- Shell: `ProjectAppShell` в сегменте `(app)`; навигация «Проекты» / «Мастерская»; `lg+` постоянный sidebar, ниже `lg` — `Sheet` слева и кнопка меню.
+
 ### Completion Notes List
+
+- Реализованы shadcn (Button, Sheet, Separator, ScrollArea), токены в `globals.css`, оболочка и маршруты `/projects`, `/workshop`, редирект `/` → `/projects`.
+- Метаданные и `lang="ru"` в корневом layout; правило shadcn vs `@repo/ui` — в README и комментарии у `ProjectAppShell`.
+- Добавлен скрипт `check-types` в пакет `web`; с корня успешно: `pnpm lint`, `pnpm check-types`, `pnpm build`.
 
 ### File List
 
-_(заполняется при реализации)_
+- `_bmad-output/implementation-artifacts/1-1-karkas-prilozheniya-shadcn-i-navigatsiya-proekty-masterskaya.md`
+- `pnpm-lock.yaml`
+- `_bmad-output/implementation-artifacts/sprint-status.yaml`
+- `apps/clients/web/README.md`
+- `apps/clients/web/components.json`
+- `apps/clients/web/package.json`
+- `apps/clients/web/src/app/(app)/layout.tsx`
+- `apps/clients/web/src/app/(app)/projects/page.tsx`
+- `apps/clients/web/src/app/(app)/workshop/page.tsx`
+- `apps/clients/web/src/app/globals.css`
+- `apps/clients/web/src/app/layout.tsx`
+- `apps/clients/web/src/app/page.tsx`
+- `apps/clients/web/src/components/cut/project-app-shell.tsx`
+- `apps/clients/web/src/components/ui/button.tsx`
+- `apps/clients/web/src/components/ui/scroll-area.tsx`
+- `apps/clients/web/src/components/ui/separator.tsx`
+- `apps/clients/web/src/components/ui/sheet.tsx`
+- `apps/clients/web/src/lib/utils.ts`
+
+## Change Log
+
+- 2026-05-13 — Story 1.1: shadcn/ui, `ProjectAppShell`, маршруты Проекты/Мастерская, редирект с `/`, метаданные и README; lint, check-types, build.
 
 ---
 

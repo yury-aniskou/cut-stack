@@ -1,5 +1,5 @@
 # generated: 2026-05-13T12:00:00
-# last_updated: 2026-05-13T15:30:00
+# last_updated: 2026-05-13T18:00:00
 # project: cut-stack
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev переводит в review, затем запускает code-review
 
 generated: "2026-05-13T12:00:00"
-last_updated: "2026-05-13T15:30:00"
+last_updated: "2026-05-13T14:00:00"
 project: cut-stack
 project_key: NOKEY
 tracking_system: file-system
@@ -43,7 +43,7 @@ story_location: "{project-root}/_bmad-output/implementation-artifacts"
 
 development_status:
   epic-1: in-progress
-  1-1-karkas-prilozheniya-shadcn-i-navigatsiya-proekty-masterskaya: ready-for-dev
+  1-1-karkas-prilozheniya-shadcn-i-navigatsiya-proekty-masterskaya: done
   1-2-presety-listov-kerf-trim-i-zazory-fasada-v-profile-masterskoy: ready-for-dev
   1-3-sozdanie-otkrytie-sohranenie-i-kopirovanie-proektov: ready-for-dev
   1-4-novyy-proekt-s-podstavlennymi-parametrami-profile-masterskoy: ready-for-dev
