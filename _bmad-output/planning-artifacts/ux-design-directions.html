@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>cut-stack — направления UX (витрина)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0f1419;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --bg: #f8fafc;
+      --card: #fff;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --ok: #15803d;
+      --warn: #b45309;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    header.sticky {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(248, 250, 252, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 20px;
+    }
+    header h1 { margin: 0; font-size: 15px; font-weight: 600; }
+    header p { margin: 4px 0 0; color: var(--muted); font-size: 12px; max-width: 720px; }
+    nav.dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    nav.dots a {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      text-decoration: none;
+    }
+    nav.dots a:hover { border-color: var(--accent); color: var(--accent); }
+    main { padding: 20px; max-width: 1400px; margin: 0 auto; }
+    section.mock {
+      margin-bottom: 48px;
+      scroll-margin-top: 72px;
+    }
+    section.mock h2 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    section.mock .tag {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      color: #1e40af;
+    }
+    section.mock .tag.alt { background: #f1f5f9; color: var(--muted); }
+    section.mock > p.meta {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 12px;
+      max-width: 800px;
+    }
+    .frame {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: 0 1px 3px rgba(15, 20, 25, 0.06);
+      min-height: 280px;
+    }
+    .row { display: flex; }
+    .sb {
+      width: 200px;
+      background: #f1f5f9;
+      border-right: 1px solid var(--line);
+      padding: 10px;
+      flex-shrink: 0;
+    }
+    .sb.narrow { width: 56px; padding: 8px 6px; }
+    .sb-item {
+      padding: 6px 8px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .sb-item.on { background: #fff; color: var(--ink); font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .topbar {
+      height: 40px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .tabs { display: flex; gap: 4px; }
+    .tab { padding: 6px 10px; border-radius: 6px; cursor: default; }
+    .tab.on { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+    .body { flex: 1; display: flex; min-height: 220px; }
+    .panel {
+      flex: 1;
+      padding: 10px;
+      border-right: 1px solid var(--line);
+      min-width: 0;
+    }
+    .panel:last-child { border-right: none; }
+    .fake-3d {
+      height: 120px;
+      background: linear-gradient(145deg, #e2e8f0 0%, #f8fafc 50%, #cbd5e1 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .fake-map {
+      height: 140px;
+      background: #faf8f5;
+      border: 1px dashed #d6d3d1;
+      border-radius: 8px;
+      position: relative;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      padding: 8px;
+      color: #44403c;
+    }
+    .fake-map .cut { position: absolute; border: 1px solid #57534e; background: rgba(255,255,255,.6); }
+    table.mini { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 8px; }
+    table.mini th, table.mini td { border: 1px solid var(--line); padding: 4px 6px; text-align: left; }
+    table.mini th { background: #f8fafc; font-weight: 500; }
+    .mono { font-family: "JetBrains Mono", monospace; }
+    /* Direction-specific overrides */
+    #d2 .frame { --card: #fafafa; }
+    #d2 .sb { background: #fafafa; }
+    #d3 .frame { background: #0f172a; color: #e2e8f0; border-color: #334155; }
+    #d3 .sb { background: #1e293b; border-color: #334155; color: #94a3b8; }
+    #d3 .sb-item.on { background: #334155; color: #f1f5f9; }
+    #d3 .topbar { border-color: #334155; color: #94a3b8; }
+    #d3 .tab.on { background: #334155; color: #93c5fd; }
+    #d3 .panel { border-color: #334155; }
+    #d3 .fake-3d { background: linear-gradient(145deg, #1e293b, #334155); color: #94a3b8; }
+    #d3 .fake-map { background: #1e293b; border-color: #475569; color: #cbd5e1; }
+    #d3 table.mini th { background: #1e293b; color: #94a3b8; }
+    #d3 table.mini td { border-color: #334155; }
+    #d4 .fake-map { background: #fffbeb; border-color: #fcd34d; }
+    #d5 .body { flex-direction: column; }
+    #d5 .panel { border-right: none; border-bottom: 1px solid var(--line); }
+    #d5 .panel:last-child { border-bottom: none; flex: 2; }
+    #d6 .frame .body { min-height: 180px; }
+    #d6 .panel { font-size: 10px; padding: 6px; }
+    #d6 .fake-3d, #d6 .fake-map { height: 70px; }
+    #d7 .row { flex-direction: column; }
+    #d7 .sb { width: 100%; border-right: none; border-bottom: 1px solid var(--line); display: flex; gap: 8px; flex-wrap: wrap; }
+    #d7 .sb-item { margin: 0; }
+    #d8 .frame { border-radius: 4px; box-shadow: none; }
+    #d8 .topbar { height: 32px; font-size: 10px; }
+    .badge-rec { background: #dcfce7; color: #166534; font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <header class="sticky">
+    <h1>cut-stack — витрина направлений дизайна (v1, desktop-first)</h1>
+    <p>
+      Восемь вариантов компоновки и веса интерфейса. Откройте в браузере локально или через превью.
+      Оценивайте: иерархию, плотность, читаемость карты, соответствие «спокойной мастерской».
+    </p>
+    <nav class="dots" aria-label="Навигация по макетам">
+      <a href="#d1">1 · Sidebar IDE</a>
+      <a href="#d2">2 · Светло-серый</a>
+      <a href="#d3">3 · Тёмный цех</a>
+      <a href="#d4">4 · Тёплый canvas</a>
+      <a href="#d5">5 · Карта снизу</a>
+      <a href="#d6">6 · Ультраплотный</a>
+      <a href="#d7">7 · Гориз. нав.</a>
+      <a href="#d8">8 · Минимум хрома</a>
+    </nav>
+  </header>
+  <main>
+    <section class="mock" id="d1">
+      <h2>1. Боковая навигация «IDE мастерской» <span class="badge-rec">рекомендуется v1</span></h2>
+      <p class="meta">Слева разделы (Проекты / Мастерская / текущий проект), центр — табы Параметры · 3D · Детали · Раскрой; справа или ниже — карта. Знакомый паттерн для целевой аудитории.</p>
+      <div class="frame">
+        <div class="row" style="min-height:260px">
+          <div class="sb">
+            <div class="sb-item">Проекты</div>
+            <div class="sb-item">Мастерская</div>
+            <div class="sb-item on">Шкаф А-12</div>
+            <div class="sb-item">Экспорт</div>
+          </div>
+          <div class="main">
+            <div class="topbar">
+              <div class="tabs">
+                <span class="tab">Параметры</span>
+                <span class="tab on">3D</span>
+                <span class="tab">Детали</span>
+                <span class="tab">Раскрой</span>
+              </div>
+              <span style="margin-left:auto" class="mono">Слой: чистовой ▾</span>
+            </div>
+            <div class="body">
+              <div class="panel" style="flex:1.1">
+                <div class="fake-3d">3D превью корпуса</div>
+                <table class="mini">
+                  <tr><th>Деталь</th><th class="mono">L×W</th><th>Слой</th></tr>
+                  <tr><td>Бок Л</td><td class="mono">1820×600</td><td>чистовой</td></tr>
+                  <tr><td>Полка</td><td class="mono">564×300</td><td>на пилу</td></tr>
+                </table>
+              </div>
+              <div class="panel" style="flex:0.9">
+                <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Лист 2800×2070 · Вариант B</div>
+                <div class="fake-map">
+                  <span style="position:absolute;top:6px;left:6px">R1 R2 R3…</span>
+                  <div class="cut" style="left:12%;top:18%;width:35%;height:40%">A</div>
+                  <div class="cut" style="left:50%;top:18%;width:22%;height:55%">B</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock" id="d2">
+      <h2>2. Светло-серая нейтраль <span class="tag alt">shadcn-default feel</span></h2>
+      <p class="meta">Максимальная близость к дефолтной светлой теме shadcn: мало «бренда», много нейтрали. Хорош для быстрой реализации.</p>
+      <div class="frame">
+        <div class="row" style="min-height:240px">
+          <div class="sb">
+            <div class="sb-item on">Проект</div>
+            <div class="sb-item">Настройки</div>
+          </div>
+          <div class="main">
+            <div class="topbar"><strong>Шкаф А-12</strong></div>
+            <div class="body">
+              <div class="panel"><div class="fake-3d">3D</div></div>
+              <div class="panel"><div class="fake-map">Карта</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock" id="d3">
+      <h2>3. Тёмный «вечер в цеху» <span class="tag alt">out of scope v1?</span></h2>
+      <p class="meta">Снижает усталость глаз при длительной работе; PDF/печать остаются светлыми отдельно. Добавляет работу по токенам и контрасту карты.</p>
+      <div class="frame">
+        <div class="row" style="min-height:240px">
+          <div class="sb">
+            <div class="sb-item on">Раскрой</div>
+            <div class="sb-item">Детали</div>
+          </div>
+          <div class="main">
+            <div class="topbar">Тёмная тема · контраст карты — отдельные токены</div>
+            <div class="body">
+              <div class="panel"><div class="fake-3d">3D</div></div>
+              <div class="panel"><div class="fake-map">Guillotine</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock" id="d4">
+      <h2>4. Тёплый фон зоны чертежа <span class="tag">акцент карты</span></h2>
+      <p class="meta">Хром приложения нейтральный, зона 2D-карты — слегка тёплая («бумага»), чтобы отделить «что режем» от панелей.</p>
+      <div class="frame">
+        <div class="row" style="min-height:240px">
+          <div class="sb"><div class="sb-item on">Раскрой</div></div>
+          <div class="main">
+            <div class="topbar">Проект · Лист ЛДСП</div>
+            <div class="body">
+              <div class="panel"><div class="fake-3d">3D</div></div>
+              <div class="panel"><div class="fake-map">Карта на «бумаге»</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock" id="d5">
+      <h2>5. Карта листа снизу (широкая полоса) <span class="tag alt">чертежник</span></h2>
+      <p class="meta">3D и таблица сверху, карта на всю ширину снизу — как чертёжный стол. Удобно для ручной правки guillotine.</p>
+      <div class="frame">
+        <div class="main" style="min-height:280px">
+          <div class="topbar"><div class="tabs"><span class="tab on">Детали</span><span class="tab">3D</span></div></div>
+          <div class="body" style="flex-direction:column">
+            <div class="panel" style="display:flex;gap:10px;border-bottom:1px solid var(--line)">
+              <div style="flex:1"><div class="fake-3d" style="height:80px">3D</div></div>
+              <div style="flex:1"><table class="mini"><tr><th>Деталь</th><th class="mono">мм</th></tr><tr><td>Стенка</td><td class="mono">2070</td></tr></table></div>
+            </div>
+            <div class="panel" style="flex:2"><div class="fake-map" style="height:120px">Карта на всю ширину</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock" id="d6">
+      <h2>6. Ультраплотный табличный <span class="tag alt">Excel-наследие</span></h2>
+      <p class="meta">Максимум строк деталировки на экране; 3D и карта ужаты. Риск перегруза — только если пользователь явно просит.</p>
+      <div class="frame">
+        <div class="row" style="min-height:200px">
+          <div class="sb narrow"><div class="sb-item on">≡</div></div>
+          <div class="main">
+            <div class="topbar" style="height:28px">Деталировка</div>
+            <div class="body">
+              <div class="panel"><div class="fake-3d"></div><table class="mini"><tr><th>…</th><th>…</th><th>…</th></tr><tr><td>…</td><td>…</td><td>…</td></tr><tr><td>…</td><td>…</td><td>…</td></tr></table></div>
+              <div class="panel"><div class="fake-map"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock" id="d7">
+      <h2>7. Горизонтальная навигация <span class="tag alt">веб-приложение</span></h2>
+      <p class="meta">Все разделы в верхней полосе; боковой колонки нет. Проще на узких окнах, но меньше «IDE-ощущения».</p>
+      <div class="frame">
+        <div class="row" style="flex-direction:column;min-height:240px">
+          <div class="sb" style="display:flex;align-items:center;gap:12px">
+            <strong>cut-stack</strong>
+            <div class="sb-item on">Проекты</div>
+            <div class="sb-item">Мастерская</div>
+            <div class="sb-item">Шкаф А-12</div>
+          </div>
+          <div class="main">
+            <div class="topbar"><div class="tabs"><span class="tab on">Раскрой</span></div></div>
+            <div class="body">
+              <div class="panel"><div class="fake-map" style="height:160px">Карта</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock" id="d8">
+      <h2>8. Минимум хрома <span class="tag alt">фокус на контент</span></h2>
+      <p class="meta">Узкие поля, мало скруглений — почти «инженерный» UI. Быстро читается, но меньше «теплоты» shadcn.</p>
+      <div class="frame">
+        <div class="row" style="min-height:220px">
+          <div class="sb narrow"><div class="sb-item on">•</div><div class="sb-item">•</div></div>
+          <div class="main">
+            <div class="topbar">Шкаф А-12 / Раскрой</div>
+            <div class="body">
+              <div class="panel"><div class="fake-map" style="border-radius:2px;height:160px">Карта</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding:16px;background:#eff6ff;border-radius:10px;border:1px solid #bfdbfe;font-size:12px">
+      <strong>Критерии выбора (напоминание):</strong>
+      интуитивность иерархии · соответствие «плотному рабочему столу» · читаемость карты · навигация без потери контекста · совместимость с shadcn + Geist.
+      По умолчанию для спецификации рекомендуется комбинация <strong>направление 1</strong> (каркас) + при необходимости тёплый canvas из <strong>направления 4</strong> только в зоне 2D.
+    </section>
+  </main>
+</body>
+</html>
